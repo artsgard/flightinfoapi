@@ -34,7 +34,7 @@ public class FlightController {
     private FlightInfoService flightService;
 
     @GetMapping(path = "/findFlightInfoByTailnumber/{tailnumber}", produces = "application/json")
-    public ResponseEntity<?> findFlightInfoByTailnumber(@PathVariable("tailnumber") String tailnumber) {
+    public ResponseEntity<List<FlightInfo>> findFlightInfoByTailnumber(@PathVariable("tailnumber") String tailnumber) {
         int offset = 0;
         List<FlightInfo> flights = new ArrayList();
         for (int i = 0; i < 2; i++) {

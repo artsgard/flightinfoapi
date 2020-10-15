@@ -8,6 +8,7 @@ import com.artsgard.flightinfoapi.serviceimpl.FlightInfoExternalServiceImpl;
 import com.artsgard.flightinfoapi.serviceimpl.FlightInfoServiceImpl;
 import com.artsgard.flightinfoapi.serviceimpl.MapperServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +48,9 @@ public class FlightControllerMockitoTest {
 
     @InjectMocks
     FlightController flightController;
+    
+    @Mock
+    HttpURLConnection connection;
 
     private JacksonTester<FlightInfo> jsonFlight;
     private JacksonTester<FlightInfoExResult> jsonFlightResult;
@@ -84,7 +88,8 @@ public class FlightControllerMockitoTest {
 
     @Test
     public void testFindFlightInfoByTailnumber() throws Exception {
-        given(flightExtService.getFlightInfo("EC-MYT", 0)).willReturn(flightExResult);
+        given(flightExtService.getFlightInfo(any(String.class), 0)).willReturn(flightExResult);
+        given(flightExtService.getConnection(any(String.class), any(String.class), any(String.class))).willReturn(connection);
 
         MockHttpServletResponse response = mockMvc
                 .perform(MockMvcRequestBuilders.get("/findFlightInfoByTailnumber/{tailnumber}", "EC-MYT"))

@@ -7,16 +7,19 @@ import com.artsgard.flightinfoapi.service.MapperService;
 import com.artsgard.flightinfoapi.serviceimpl.FlightInfoExternalServiceImpl;
 import com.artsgard.flightinfoapi.serviceimpl.FlightInfoServiceImpl;
 import com.artsgard.flightinfoapi.serviceimpl.MapperServiceImpl;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.json.JacksonTester;
@@ -44,6 +47,9 @@ public class FlightControllerServerTest {
     @Mock
     private FlightInfoExternalServiceImpl flightExtService;
 
+    @Mock
+    HttpURLConnection connection;
+
     @Autowired
     private JacksonTester<FlightInfo> jsonFlight;
 
@@ -68,7 +74,7 @@ public class FlightControllerServerTest {
         });
         flightExResult = FlightInfoMock.generateFlightInfoExResult();
     }
-    
+
     @Test
     void testMockInjection() {
         assertThat(restTemplate).isNotNull();
@@ -83,6 +89,7 @@ public class FlightControllerServerTest {
     @Test
     public void testFindFlightInfoByTailnumber() throws Exception {
         given(flightExtService.getFlightInfo("tailnumber", 0)).willReturn(flightExResult);
+        given(flightExtService.getConnection(any(String.class), any(String.class), any(String.class))).willReturn(connection);
 
         ResponseEntity<FlightInfoExResult> flightResponse = restTemplate.getForEntity("/findFlightInfoByTailnumber/tailnumber", FlightInfoExResult.class);
 
@@ -94,7 +101,7 @@ public class FlightControllerServerTest {
     public void testFindFlightInfosByIdent() throws Exception {
         given(flightService.findFlightsInfoByIdent("ident")).willReturn(flights);
 
-        ResponseEntity <FlightInfo[]> flightResponse = restTemplate.getForEntity("/findFlightInfosByIdent/ident", FlightInfo[].class);
+        ResponseEntity<FlightInfo[]> flightResponse = restTemplate.getForEntity("/findFlightInfosByIdent/ident", FlightInfo[].class);
 
         assertThat(flightResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(flightResponse.getBody().equals(flights));

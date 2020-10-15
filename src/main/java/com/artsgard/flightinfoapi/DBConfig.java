@@ -48,4 +48,3 @@ public class DBConfig {
         return dataSourceBuilder.build();
     }
 }
-
