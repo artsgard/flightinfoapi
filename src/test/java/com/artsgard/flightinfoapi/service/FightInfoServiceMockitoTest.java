@@ -1,7 +1,9 @@
-/*
+
 package com.artsgard.flightinfoapi.service;
 
+import com.artsgard.flightinfoapi.DTO.AirportDisplay;
 import com.artsgard.flightinfoapi.DTO.FlightInfo;
+import com.artsgard.flightinfoapi.entity.AirportDisplayEntity;
 import com.artsgard.flightinfoapi.entity.FlightInfoEntity;
 import com.artsgard.flightinfoapi.exception.ResourceNotFoundException;
 import com.artsgard.flightinfoapi.mock.FlightInfoMock;
@@ -53,7 +55,10 @@ public class FightInfoServiceMockitoTest {
     @BeforeEach
     public void setup() {
         flight1 = FlightInfoMock.generateFlightInfo();
+        flightEntity1 = FlightInfoMock.generateFlightInfoEntity();
+        flightEntity2 = realMapperService.mapFlightInfoDTOToFlightInfoEntity(flight1);
         flights = new ArrayList();
+        flightEntities = new ArrayList();
         FlightInfoMock.generateFlights().forEach((flg) -> {
             flightEntities.add(realMapperService.mapFlightInfoDTOToFlightInfoEntity(flg));
         });
@@ -87,7 +92,7 @@ public class FightInfoServiceMockitoTest {
         FlightInfo sc = flightInfoService.findFlightInfoById(any(Long.class));
         assertThat(sc).isNotNull();
         assertThat(sc.getFaFlightId()).isEqualTo(flightEntity1.getFaFlightId());
-        assertThat(sc.getDestination()).isEqualTo(flightEntity1.getDestination());
+        assertThat(sc.getDestinationCity()).isEqualTo(flightEntity1.getDestinationCity());
     }
 
     @Test
@@ -97,35 +102,54 @@ public class FightInfoServiceMockitoTest {
             flightInfoService.findFlightInfoById(any(Long.class));
         });
     }
+    
+    @Test
+    public void testFindFlightsInfoByIdent() {
+        flight1.setId(EXISTING_ID);
+        given(flightInfoRepo.findById(any(Long.class))).willReturn(Optional.of(flightEntity1));
+        given(mapperService.mapFlightInfoEntityToFlightInfoDTO(any(FlightInfoEntity.class))).willReturn(flight1);
+        FlightInfo sc = flightInfoService.findFlightInfoById(any(Long.class));
+        assertThat(sc).isNotNull();
+        assertThat(sc.getFaFlightId()).isEqualTo(flightEntity1.getFaFlightId());
+        assertThat(sc.getDestinationCity()).isEqualTo(flightEntity1.getDestinationCity());
+    }
 
     @Test
+    public void testFindFlightsInfoByIdent_not_found() {
+       given(flightInfoRepo.findById(any(Long.class))).willReturn(Optional.empty());
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            flightInfoService.findFlightInfoById(any(Long.class));
+        });
+    }
+
+    //@Test
     public void testSaveAllFlights() {
         flightEntity1.setId(EXISTING_ID);
         given(flightInfoRepo.save(any(FlightInfoEntity.class))).willReturn(flightEntity1);
         given(mapperService.mapFlightInfoDTOToFlightInfoEntity(any(FlightInfo.class))).willReturn(flightEntity1);
-        given(flightInfoService.saveFlightInfo(flightInfoDTOMock)).willReturn(flightInfoDTOMock);
-        BookerDTO sc = flightInfoService.saveBooking(flightInfoDTOMock);
-        assertThat(sc).isNotNull();
+        given(flightInfoService.saveFlightInfo(flight1, any(AirportDisplay.class),  any(AirportDisplay.class))).willReturn(flight1);
+        //BookerDTO sc = flightInfoService.saveBooking(flightEntity1);
+        //assertThat(sc).isNotNull();
     }
 
     //@Test
-    public void testUpdateBooker() {
-        flightInfoDTOMock.setId(EXISTING_ID);
-        flightInfoEntityMock1.setId(EXISTING_ID);
-        given(flightInfoRepo.findById(any(Long.class))).willReturn(Optional.of(flightInfoEntityMock1));
-        given(flightInfoRepo.save(any(FlightInfoEntity.class))).willReturn(flightInfoEntityMock1);
-        given(mapperService.mapBookerDTOToFlightInfoEntity(any(BookerDTO.class))).willReturn(flightInfoEntityMock1);
+    public void testUpdateFlight() {
+        flight1.setId(EXISTING_ID);
+        flight2.setId(EXISTING_ID);
+        given(flightInfoRepo.findById(any(Long.class))).willReturn(Optional.of(flightEntity2));
+        given(flightInfoRepo.save(any(FlightInfoEntity.class))).willReturn(flightEntity2);
+        given(mapperService.mapFlightInfoDTOToFlightInfoEntity(any(FlightInfo.class))).willReturn(flightEntity2);
         //given(flightInfoService.updateBooking(flightInfoDTOMock)).willReturn(flightInfoDTOMock);
-        BookerDTO sc = flightInfoService.updateBooking(flightInfoDTOMock);
-        assertThat(sc).isNotNull(); // why is this null!!!!!
+        FlightInfo flght = flightInfoService.updateFlightInfo(flight1);
+        assertThat(flght).isNotNull(); // why is this null!!!!!
     }
 
     @Test
-    public void testUpdateBooker_not_found() {
+    public void testUpdateFlight_not_found() {
         given(flightInfoRepo.findById(any(Long.class))).willReturn(Optional.empty());
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            flightInfoDTOMock.setId(any(Long.class));
-            flightInfoService.updateBooking(flightInfoDTOMock);
+            flight1.setId(any(Long.class));
+            flightInfoService.updateFlightInfo(flight1);
         });
     }
 
@@ -139,9 +163,8 @@ public class FightInfoServiceMockitoTest {
     public void testDeleteBookerById_not_found() {
         given(flightInfoRepo.findById(any(Long.class))).willReturn(Optional.empty());
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            flightInfoService.deleteBookingById(any(Long.class));
+            flightInfoService.deleteFlightInfoById(any(Long.class));
         });
     }
 
 }
-*/

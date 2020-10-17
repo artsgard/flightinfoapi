@@ -27,7 +27,7 @@ public class FlightInfoApiApplication {
         SpringApplication.run(FlightInfoApiApplication.class, args);
     }
 
-    @Bean(name = "restTemplate")
+    @Bean(name = "restTemp")
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.basicAuthentication(authUsername, authApikey).build(); //.errorHandler(errorHandler).build();
     }

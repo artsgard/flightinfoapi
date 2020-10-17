@@ -14,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class RestTemplateController {
 
     @Autowired
-    @Qualifier("restTemplate")
+    @Qualifier("restTemp")
     RestTemplate restTemplate;
     
     private final static String BASEURL = "https://flightxml.flightaware.com/json/FlightXML2/FlightInfoEx";
