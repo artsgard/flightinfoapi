@@ -20,7 +20,7 @@ public class RestTemplateController {
     private final static String BASEURL = "https://flightxml.flightaware.com/json/FlightXML2/FlightInfoEx";
   
     @RequestMapping(path = "/flightInfoTemplate")
-    public ResponseEntity<JsonWrapper> getAirportBoards(@RequestParam String ident) {
+    public ResponseEntity<JsonWrapper> getTailFlights(@RequestParam String ident) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(BASEURL)
                 .queryParam("ident", ident)
                 .queryParam("howMany", 15)

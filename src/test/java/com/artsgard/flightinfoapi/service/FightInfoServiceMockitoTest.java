@@ -122,7 +122,7 @@ public class FightInfoServiceMockitoTest {
         });
     }
 
-    //@Test
+    @Test
     public void testSaveAllFlights() {
         flightEntity1.setId(EXISTING_ID);
         given(flightInfoRepo.save(any(FlightInfoEntity.class))).willReturn(flightEntity1);
@@ -132,7 +132,7 @@ public class FightInfoServiceMockitoTest {
         //assertThat(sc).isNotNull();
     }
 
-    //@Test
+    @Test
     public void testUpdateFlight() {
         flight1.setId(EXISTING_ID);
         flight2.setId(EXISTING_ID);
@@ -154,13 +154,13 @@ public class FightInfoServiceMockitoTest {
     }
 
     @Test
-    public void testDeleteBookerById() {
+    public void testDeleteFlightById() {
         flightInfoRepo.deleteById(EXISTING_ID);
         verify(flightInfoRepo, times(1)).deleteById(eq(EXISTING_ID));
     }
 
     @Test
-    public void testDeleteBookerById_not_found() {
+    public void testDeleteFlightById_not_found() {
         given(flightInfoRepo.findById(any(Long.class))).willReturn(Optional.empty());
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             flightInfoService.deleteFlightInfoById(any(Long.class));

@@ -59,8 +59,13 @@ public class AirportDisplayServiceImpl implements AirportDisplayService {
     }
 
     @Override
-    public AirportDisplay findAirportDisplayByUsername(String username) throws ResourceNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public AirportDisplay findAirportDisplayByName(String name) throws ResourceNotFoundException {
+        Optional<AirportDisplayEntity> opAirportDisplay = displayRepo.findByName(name);
+        if (opAirportDisplay.isPresent()) {
+            return mapperService.mapAirportDisplayEntityToAirportDisplayDTO(opAirportDisplay.get());
+        } else {
+            throw new ResourceNotFoundException("no airportDisplay found with name: " + name);
+        }
     }
 
     @Override

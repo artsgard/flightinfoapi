@@ -1,5 +1,6 @@
 package com.artsgard.flightinfoapi.mock;
 
+import com.artsgard.flightinfoapi.DTO.AirportDisplay;
 import com.artsgard.flightinfoapi.DTO.FlightInfo;
 import com.artsgard.flightinfoapi.DTO.FlightInfoExResult;
 import com.artsgard.flightinfoapi.entity.AirportDisplayEntity;
@@ -34,6 +35,18 @@ public final class FlightInfoMock {
         return flight;
     }
 
+    public static AirportDisplayEntity generateAirportOrigen() {
+        AirportDisplayEntity origin = new AirportDisplayEntity(null, "name-airport-origin", "location-airport-origin", 12.12D, 12.12D, "time-zone");
+
+        return origin;
+    }
+    
+    public static AirportDisplayEntity generateAirportDestination() {
+        AirportDisplayEntity destination = new AirportDisplayEntity(null, "name-airport-destination", "location-airport-destination", 12.12D, 12.12D, "time-zone");
+
+        return destination;
+    }
+
     public static List<FlightInfo> generateFlights() {
         List<FlightInfo> flights = new ArrayList();
         FlightInfo flight1 = new FlightInfo(null, "faFlightId1", "ident1", "aircraftType1", "filedEte1", 12231L, 12341L,
@@ -50,7 +63,7 @@ public final class FlightInfoMock {
         flights.add(flight3);
         return flights;
     }
-    
+
     public static FlightInfoExResult generateFlightInfoExResult() {
         FlightInfoExResult result = new FlightInfoExResult();
         result.setOffset(15);

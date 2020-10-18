@@ -13,27 +13,8 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @PropertySource({"classpath:application.properties"})
 public class FlightInfoApiApplication {
-    
-    //@Autowired
-    //ErrorHandler errorHandler;
-
-    @Value("${auth.username}")
-    private String authUsername;
-
-    @Value("${auth.apikey}")
-    private String authApikey;
 
     public static void main(String[] args) {
         SpringApplication.run(FlightInfoApiApplication.class, args);
-    }
-
-    @Bean(name = "restTemp")
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.basicAuthentication(authUsername, authApikey).build(); //.errorHandler(errorHandler).build();
-    }
-
-    @Bean
-    public ObjectMapper jacksonObjectMapper() {
-        return new ObjectMapper().setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
     }
 }
